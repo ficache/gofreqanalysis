@@ -39,29 +39,42 @@ func break_string(string_to_process string) []rune {
 	return runes
 }
 
+func DecodeFrequency(frequency map[rune]int) map[rune]string {
+
+	decode := make(map[rune]string, len(frequency))
+	for k, val := range frequency {
+		fmt.Printf("Известно что буква %v встречалась %v раз\nКакую букву подставим?", string(k), val)
+		char := read_input()
+
+		decode[k] = char
+	}
+
+	return decode
+}
+
+func CalcCharPercent(frequency map[rune]int) {
+
+	var sum float32 = 0
+	for _, val := range frequency {
+		sum += float32(val)
+	}
+
+	for k, val := range frequency {
+		var percent float32 = float32(val) * 100 / sum
+		fmt.Printf("Частота буквы %v равна %v от общего количества \n", string(k), percent)
+	}
+}
+
 func main() {
 	var input string = read_input()
 	runes := break_string(input)
 
 	freq := get_freq(runes)
 
-	var sum float32 = 0
-	for _, val := range freq {
-		sum += float32(val)
-	}
+	CalcCharPercent(freq)
 
-	for k, val := range freq {
-		var percent float32 = float32(val) * 100 / sum
-		fmt.Printf("Частота буквы %v равна %v от общего количества \n", string(k), percent)
-	}
+	decode := DecodeFrequency(freq)
 
-	decode := make(map[rune]string, len(freq))
-	for k, val := range freq {
-		fmt.Printf("Известно что буква %v встречалась %v раз\nКакую букву подставим?", string(k), val)
-		char := read_input()
-
-		decode[k] = char
-	}
 	var output = make([]string, len(runes))
 	for _, rune := range runes {
 		output = append(output, strings.TrimSpace(decode[rune]))
